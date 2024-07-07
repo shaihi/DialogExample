@@ -23,10 +23,13 @@ import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.chip.Chip;
+
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
-    TextView timeTextView, dateTextView;
+    private TextView timeTextView, dateTextView;
+    private Chip alertTypeChip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +41,20 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        alertTypeChip = findViewById(R.id.dialogSelect);
+        timeTextView = findViewById(R.id.timeTextView);
+        dateTextView = findViewById(R.id.dateTextView);
+
         Button alertDialogButton = findViewById(R.id.alertDialogButton);
         alertDialogButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showAlertDialog();
+                if (alertTypeChip.isChecked()) {
+                    showMultiChoiceAlertDialog();
+                } else {
+                    showSimpleAlertDialog();
+                }
             }
         });
 
@@ -53,9 +65,6 @@ public class MainActivity extends AppCompatActivity {
                 showProgressDialog();
             }
         });
-
-        timeTextView = findViewById(R.id.timeTextView);
-        dateTextView = findViewById(R.id.dateTextView);
 
         Button timePickerButton = findViewById(R.id.timePickerButton);
         timePickerButton.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void showAlertDialog() {
+    private void showSimpleAlertDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Alert")
                 .setMessage("This is an alert dialog.")
@@ -82,6 +91,31 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // Handle OK button press
                         Toast.makeText(MainActivity.this, "OK was pressed", Toast.LENGTH_LONG).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void showMultiChoiceAlertDialog() {
+        final String[] items = {"Item 1", "Item 2", "Item 3"};
+        final boolean[] checkedItems = {false, false, false};
+
+        new AlertDialog.Builder(this)
+                .setTitle("Multi-choice Alert")
+                .setMultiChoiceItems(items, checkedItems, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        checkedItems[which] = isChecked;
+                        Toast.makeText(MainActivity.this,
+                                "Item " + items[which] +" is now " + (checkedItems[which]?"selected":"deselected"),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Handle OK button press
                     }
                 })
                 .setNegativeButton("Cancel", null)

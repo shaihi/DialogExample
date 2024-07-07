@@ -7,15 +7,30 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/alertDialogButton"
+    <LinearLayout
+        android:id="@+id/alertContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Show Alert Dialog"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/progressDialogButton"/>
+        app:layout_constraintBottom_toTopOf="@id/progressDialogButton">
+        <Button
+            android:id="@+id/alertDialogButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Alert Dialog"
+            />
+        <com.google.android.material.chip.Chip
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dialogSelect"
+            app:chipStrokeColor="@color/design_default_color_primary_variant"
+            app:chipStrokeWidth="1dp"
+            app:checkedIconVisible="false"
+            android:text="Multi-choice Alert"/>
+    </LinearLayout>
 
     <Button
         android:id="@+id/progressDialogButton"
@@ -24,7 +39,7 @@
         android:text="Show Progress Dialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/alertDialogButton"
+        app:layout_constraintTop_toBottomOf="@id/alertContainer"
         app:layout_constraintBottom_toTopOf="@id/timePickerButton"/>
 
     <Button
