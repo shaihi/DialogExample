@@ -1,5 +1,7 @@
 package com.shaihi.dialogexample;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -7,7 +9,10 @@ import android.view.View;
 import android.widget.Button;
 
 import android.content.DialogInterface;
+import android.widget.DatePicker;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,7 +23,10 @@ import androidx.core.view.ViewCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
+    TextView timeTextView, dateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +51,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showProgressDialog();
+            }
+        });
+
+        timeTextView = findViewById(R.id.timeTextView);
+        dateTextView = findViewById(R.id.dateTextView);
+
+        Button timePickerButton = findViewById(R.id.timePickerButton);
+        timePickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showTimePickerDialog();
+            }
+        });
+
+        Button datePickerButton = findViewById(R.id.datePickerButton);
+        datePickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
             }
         });
     }
@@ -85,5 +112,42 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 }, 3000);
+    }
+
+    private void showTimePickerDialog() {
+        // Get current time
+        final Calendar c = Calendar.getInstance();
+        int hour = c.get(Calendar.HOUR_OF_DAY);
+        int minute = c.get(Calendar.MINUTE);
+
+        // Create and show the TimePickerDialog
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+                new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        // Set selected time to the TextView
+                        timeTextView.setText(String.format("%02d:%02d", hourOfDay, minute));
+                    }
+                }, hour, minute, true);
+        timePickerDialog.show();
+    }
+
+    private void showDatePickerDialog() {
+        // Get current date
+        final Calendar c = Calendar.getInstance();
+        int year = c.get(Calendar.YEAR);
+        int month = c.get(Calendar.MONTH);
+        int day = c.get(Calendar.DAY_OF_MONTH);
+
+        // Create and show the DatePickerDialog
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        // Set selected date to the TextView
+                        dateTextView.setText(String.format("%02d/%02d/%04d", dayOfMonth, monthOfYear + 1, year));
+                    }
+                }, year, month, day);
+        datePickerDialog.show();
     }
 }
