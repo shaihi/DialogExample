@@ -122,6 +122,50 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void showProgressDialogPercentage() {
+        // Create a LinearLayout to hold the ProgressBar
+        LinearLayoutCompat layout = new LinearLayoutCompat(this);
+        layout.setOrientation(LinearLayoutCompat.VERTICAL);
+        layout.setPadding(50, 50, 50, 50);
+
+// Create the ProgressBar
+        ProgressBar progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        progressBar.setMax(100);
+        layout.addView(progressBar);
+
+// Create the TextView to show progress percentage
+        TextView progressTextView = new TextView(this);
+        progressTextView.setPadding(0, 20, 0, 0);
+        layout.addView(progressTextView);
+
+// Create the AlertDialog
+        AlertDialog progressDialog = new AlertDialog.Builder(this)
+                .setTitle("Loading")
+                .setView(layout)
+                .setCancelable(false)
+                .create();
+
+        progressDialog.show();
+
+        // Use Handler with the main Looper to simulate some work with a delay
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            int progress = 0;
+
+            @Override
+            public void run() {
+                if (progress <= 100) {
+                    progressBar.setProgress(progress);
+                    progressTextView.setText(progress + "%");
+                    progress += 10;
+                    handler.postDelayed(this, 1000);  // Adjust delay as needed
+                } else {
+                    progressDialog.dismiss();
+                }
+            }
+        });
+    }
+
     private void showProgressDialog() {
         // Create a LinearLayout to hold the ProgressBar
         LinearLayoutCompat layout = new LinearLayoutCompat(this);
